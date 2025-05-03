@@ -129,7 +129,7 @@ jobs:
 
             # The URL is stored in the Github Secret named SFDX_INTEGRATION_URL
             # so here we store the URL into a text file
-             - name: 'Authenticate to PRE environment'
+            - name: 'Authenticate to PRE environment'
               run: |
                 echo $PRE_SFDX_AUTH_URL | sfdx auth:sfdxurl:store -f -
               env:
