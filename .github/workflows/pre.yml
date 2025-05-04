@@ -32,9 +32,21 @@ jobs:
         steps:
             # Now we install nodejs in the VM, and specify version 14
             - name: 'Install Node Js'
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
-                node-version: '14'
+                  node-version: '18.18.0' # Compatible Node.js version
+                  cache: 'yarn'
+
+            - name: 'Instalar Yarn'
+              run: npm install -g yarn
+
+            - name: Clear Yarn Cache
+              run: yarn cache clean
+          
+            - name: Check Node.js and Yarn Versions
+              run: |
+                  node --version
+                  yarn --version
 
             # The idea is that the VM can access your remote repository
             # because your repository is an sfdx project.
@@ -90,8 +102,7 @@ jobs:
              #     TESTS=$(cat testsToRun.txt)       
              #     echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
             
-            - name: 'Instalar Yarn'
-              run: npm install -g yarn
+            
 
             # Now Install Salesforce CLI
             - name: 'Install Salesforce CLI'
@@ -106,9 +117,6 @@ jobs:
             # This is an awesome plugin that allows us to extract a package.xml with the metadata
             # that has changed between commits. I highly recommend going over the github readme 
             # for more information on how this works.
-
-            - name: 'Instalar SFDX Scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner
 
             - name: 'Instalar dependencias'
               run: yarn install
