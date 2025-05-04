@@ -35,13 +35,22 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: '18.18.0' # Compatible Node.js version
-                  cache: 'yarn'
 
             - name: 'Instalar Yarn'
               run: npm install -g yarn
 
             - name: Clear Yarn Cache
               run: yarn cache clean
+
+              - name: Check for yarn.lock
+              run: |
+                if [ ! -f yarn.lock ]; then
+                  echo "Error: yarn.lock file is missing!"
+                  exit 1
+                fi
+        
+            - name: Install Dependencies
+              run: yarn install --frozen-lockfile
           
             - name: Check Node.js and Yarn Versions
               run: |
@@ -61,7 +70,7 @@ jobs:
             # to the destination org
 
             - name: 'Checkout source code'
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
               with:
                 fetch-depth: 0
             
@@ -150,7 +159,7 @@ jobs:
             - name: 'Populate auth file with SFDX_URL secret of pre org'
               shell: bash
               run: |
-                  echo ${{ secrets.PRE_INSTANCE_URL}} > ./PRE_INSTANCE_URL.txt
+                  echo "${{ secrets.PRE_INSTANCE_URL }}" > ./PRE_INSTANCE_URL.txt
 
             # Authenticate to org using the URL stored in the text file
             - name: 'Authenticate to pre Org'
@@ -187,14 +196,14 @@ jobs:
             # tests that can be run
 
             - name: 'Check-only deploy delta changes - run specified tests'
-              if: ${{ env.APEX_TESTS != 'all' }}
+              if: ${{ env.APEX_TESTS && env.APEX_TESTS != 'all' }}
               run: |
-                  echo ${{env.APEX_TESTS}}
-                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+                  echo "${{ env.APEX_TESTS }}"
+                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests "${{ env.APEX_TESTS }}" --json
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
-              if: ${{ env.APEX_TESTS == 'all' }}
+              if: ${{ env.APEX_TESTS && env.APEX_TESTS == 'all' }}
               run: |
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
 
