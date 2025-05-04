@@ -42,7 +42,7 @@ jobs:
             - name: Clear Yarn Cache
               run: yarn cache clean
 
-              - name: Check for yarn.lock
+            - name: Check for yarn.lock
               run: |
                 if [ ! -f yarn.lock ]; then
                   echo "Error: yarn.lock file is missing!"
