@@ -36,27 +36,6 @@ jobs:
               with:
                   node-version: '18.18.0' # Compatible Node.js version
 
-            - name: 'Instalar Yarn'
-              run: npm install -g yarn
-
-            - name: Clear Yarn Cache
-              run: yarn cache clean
-
-            - name: Check for yarn.lock
-              run: |
-                if [ ! -f yarn.lock ]; then
-                  echo "Error: yarn.lock file is missing!"
-                  exit 1
-                fi
-        
-            - name: Install Dependencies
-              run: yarn install --frozen-lockfile
-          
-            - name: Check Node.js and Yarn Versions
-              run: |
-                  node --version
-                  yarn --version
-
             # The idea is that the VM can access your remote repository
             # because your repository is an sfdx project.
             # This is a default action that allows us to enter the root 
@@ -140,8 +119,8 @@ jobs:
               run: sudo apt-get install openjdk-8-jdk
 
             # Install SFDX scanner
-            - name: 'Installing SFDX scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner
+            #- name: 'Installing SFDX scanner'
+            #  run: sfdx plugins:install @salesforce/sfdx-scanner
 
             # Prior to setting up this workflow, you have to create a Github Secret
             # that contains the sfdx url of the pre org.
