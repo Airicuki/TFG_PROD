@@ -34,7 +34,7 @@ jobs:
             - name: 'Install Node Js'
               uses: actions/setup-node@v3
               with:
-                  node-version: '18.18.0' # Compatible Node.js version
+                  node-version: '20.0.0' # Compatible Node.js version
 
             # The idea is that the VM can access your remote repository
             # because your repository is an sfdx project.
