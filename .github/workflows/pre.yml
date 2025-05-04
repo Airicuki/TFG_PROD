@@ -114,7 +114,7 @@ jobs:
 
             # Install SFDX scanner
             - name: Install SFDX Scanner Plugin
-              run: sfdx plugins:install @salesforce/sfdx-scanner --global
+              run: sfdx plugins:install @salesforce/sfdx-scanner 
 
             # Prior to setting up this workflow, you have to create a Github Secret
             # that contains the sfdx url of the pre org.
