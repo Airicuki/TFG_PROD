@@ -37,7 +37,7 @@ jobs:
       # Authenticate to PRE environment
       - name: Authenticate to PRE environment
         run: |
-          echo $PRE_SFDX_AUTH_URL | sfdx auth:sfdxurl:store -f -
+          echo $PRE_SFDX_AUTH_URL | sfdx force:auth:sfdxurl:store -f -
         env:
           PRE_SFDX_AUTH_URL: ${{ secrets.PRE_SFDX_AUTH_URL }}
 
