@@ -89,7 +89,10 @@ jobs:
              #     node ./parsePR.js              
              #     TESTS=$(cat testsToRun.txt)       
              #     echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
-                  
+            
+            - name: 'Instalar Yarn'
+              run: npm install -g yarn
+
             # Now Install Salesforce CLI
             - name: 'Install Salesforce CLI'
               run: |
@@ -103,6 +106,12 @@ jobs:
             # This is an awesome plugin that allows us to extract a package.xml with the metadata
             # that has changed between commits. I highly recommend going over the github readme 
             # for more information on how this works.
+
+            - name: 'Instalar SFDX Scanner'
+              run: sfdx plugins:install @salesforce/sfdx-scanner
+
+            - name: 'Instalar dependencias'
+              run: yarn install
 
             - name: 'Installing sfdx git delta'
               run: | 
