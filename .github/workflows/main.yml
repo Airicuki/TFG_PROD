@@ -29,6 +29,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install openjdk-8-jdk
 
+      # Install Salesforce CLI
+      - name: Install Salesforce CLI
+        run: |
+          sudo npm install --global sfdx-cli
+
       # Authenticate to PRE environment
       - name: Authenticate to PRE environment
         run: |
