@@ -4,7 +4,7 @@ name: Deploy pre branch to pre org
 # Definition when the workflow should run
 on:
     push:
-      branches: [ pre ]
+      branches: [ dev1, pre ]
       paths:
         - 'force-app/**'
             
