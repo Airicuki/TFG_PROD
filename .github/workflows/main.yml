@@ -31,7 +31,8 @@ jobs:
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
             # Now we install nodejs in the VM, and specify version 14
-            - uses: actions/setup-node@v2
+            - name: Checkout repository
+              uses: actions/setup-node@v2
               with:
                 node-version: '14'
 
