@@ -4,7 +4,7 @@ name: Deploy pre branch to pre org
 # Definition when the workflow should run
 on:
     workflow_run:
-        workflows: ["Validate PR on pre branch"]
+        workflows: ["Build"]
         types:
         - completed
     push:
