@@ -178,3 +178,5 @@ jobs:
 
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+
+            - run: echo "Build done"

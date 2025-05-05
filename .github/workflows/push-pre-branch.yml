@@ -3,6 +3,10 @@ name: Deploy pre branch to pre org
 
 # Definition when the workflow should run
 on:
+    workflow_run:
+        workflows: ["Validate PR on pre branch"]
+        types:
+        - completed
     push:
       branches: [ Dev1, pre ]
       paths:
@@ -15,6 +19,18 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
+            - run: echo "Deploy after build"
+
+            - name: 'Install Node Js'
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '20.0.0'
+
+            - name: 'Checkout source code'
+                uses: actions/checkout@v3
+                with:
+                fetch-depth: 0
+
              # Now Install Salesforce CLI
             - name: Install Salesforce CLI
               run: |
@@ -27,11 +43,6 @@ jobs:
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
-            # Checkout the source code
-            - name: 'Checkout source code'
-              uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
 
             # Store secret for both otgs
             - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
