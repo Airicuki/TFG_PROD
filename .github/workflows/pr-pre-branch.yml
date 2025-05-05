@@ -9,7 +9,7 @@ on:
       # to a branch that has an existing pull request
       types: [opened, synchronize]
       # The branches filter allows to specify that this workflow should only
-      # run if the branch name is "pre". This way we prevent this workflow
+      # run if the branch name is "pre" or "main". This way we prevent this workflow
       # from running when PRs are opened on other branches
       branches: [ pre, main ]
       # We only care about changes to the force-app directory, which is the
@@ -40,9 +40,6 @@ jobs:
             # because your repository is an sfdx project.
             # This is a default action that allows us to enter the root 
             # directory of the repository
-
-            # Make sure to specify fetch-depth:0. This allows us to
-            # access previous commits that have been pushed to the repository.
 
             # We'll need this later when we try to figure out which metadata has 
             # changed between commits, so that we can only deploy that metadata
@@ -100,8 +97,7 @@ jobs:
 
             # Then we install the SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
             # This is an awesome plugin that allows us to extract a package.xml with the metadata
-            # that has changed between commits. I highly recommend going over the github readme 
-            # for more information on how this works.
+            # that has changed between commits. 
 
             - name: 'Installing sfdx git delta'
               run: | 
