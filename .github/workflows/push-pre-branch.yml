@@ -8,8 +8,12 @@ on:
             - pr-pre-branch
         types:
             - completed
+permissions:
+    actions: write
+    contents: read
 
-# Jobs to be executed
+
+    # Jobs to be executed
 jobs:
     run-push-pre-branch:
         runs-on: ubuntu-latest
