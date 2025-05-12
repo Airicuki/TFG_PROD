@@ -1,5 +1,5 @@
 # Unique name for this workflow
-name: Build
+name: Build and deploy pre branch to pre org
 
 # Definition when the workflow should run
 on:
@@ -178,5 +178,26 @@ jobs:
 
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+
+               # Store secret for both otgs
+            - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
+              shell: bash
+              run: |
+                  echo ${{ secrets.PRE_INSTANCE_URL}} > ./PRE_INSTANCE_URL.txt
+
+            - name: 'Create delta packages for new, modified or deleted metadata'
+              run: | 
+                  mkdir changed-sources
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+
+            # Authenticate to org
+            - name: 'Authenticate to Staging Org to Staging org'
+              run: sfdx auth:sfdxurl:store -f ./PRE_INSTANCE_URL.txt -s -a staging
+
+            - name: 'Deploy the entire branch'
+              run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
+
+            - name: 'Deploy destructive changes (if any) to Staging org'
+              run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
 
             - run: echo "Build done"
