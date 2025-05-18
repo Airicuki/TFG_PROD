@@ -3,7 +3,7 @@ public class testTest {
     @isTest
     public static void testHelloWorld() {
         // Declarar la variable obj y crear una instancia de la clase test
-        test obj = new test();
+        MyTestClass obj = new MyTestClass();
 
         // Iniciar el contexto de prueba
         Test.startTest();
