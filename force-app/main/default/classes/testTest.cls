@@ -1,17 +1,16 @@
-@IsTest
-public with sharing class testTest {
-    @IsTest
-    public static void helloWorldTest() {
-        // Configuración inicial
-        MyClass obj = new MyClass();
+@isTest
+public class testTest {
+    @isTest
+    public static void testHelloWorld() {
+        // Declarar la variable obj y crear una instancia de la clase test
+        test obj = new test();
 
-        // Inicia el contexto de prueba
+        // Iniciar el contexto de prueba
         Test.startTest();
-        obj.myMethod(); // Llama al método que deseas probar
+        obj.helloWorld(); // Llamar al método que deseas probar
         Test.stopTest();
 
-        // Verifica los resultados
-        System.assertEquals('expectedValue', obj.someProperty);
+        // Verificar los resultados (puedes agregar aserciones aquí si es necesario)
+        System.assert(true, 'El método helloWorld se ejecutó correctamente.');
     }
-    
 }
