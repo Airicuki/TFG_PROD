@@ -1,23 +1,22 @@
 # Unique name for this workflow
-name: Deploy pre branch to pre org
+name: push-pre-branch
 
 # Definition when the workflow should run
 on:
-    workflow_run:
-        workflows: ["Build"]
-        types:
-        - completed
-    push:
-      branches: [ Dev1, pre ]
-      paths:
-        - 'force-app/**'
-            
+    pull_request:
+        types: [closed]
 
-# Jobs to be executed
+        branches: [pre]
+        
+        paths:
+            - 'force-app/**'
+
+
+    # Jobs to be executed
 jobs:
-    deploy-branch-to-int-and-staging-orgs:
+    run-push-pre-branch:
         runs-on: ubuntu-latest
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.event.workflow_run.conclusion == 'success' }} 
         steps:
             - run: echo "Deploy after build"
 

@@ -1,5 +1,5 @@
 # Unique name for this workflow
-name: Build
+name: pr-pre-branch
 
 # Definition when the workflow should run
 on:
@@ -22,7 +22,7 @@ on:
 # Jobs to be executed when the above conditions are met
 jobs:
     # This is the name of the job. You can give it whatever name you want
-    validate-deployment-on-pre-org:
+    pr-pre-branch:
         # As mentioned in the blog post, this job runs inside a VM. Here we
         # can specify which OS this VM should run on. 
         # In this case, we are going to run our commands on the latest version
@@ -104,9 +104,11 @@ jobs:
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
-            # Install java as it is required for the next step
-            - name: 'Installing java'
-              run: sudo apt-get install openjdk-8-jdk
+            # Install Java as it is required for the next step
+            - name: 'Installing Java'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y default-jdk --fix-missing
 
             # Install SFDX scanner
             - name: Install SFDX Scanner Plugin
@@ -179,4 +181,5 @@ jobs:
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
 
-            - run: echo "Build done"
+            - name: 'Mark workflow as successful'
+              run: echo "Workflow completed successfully!"
