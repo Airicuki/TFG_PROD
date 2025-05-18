@@ -3,14 +3,13 @@ name: push-pre-branch
 
 # Definition when the workflow should run
 on:
-    workflow_run:
-        workflows: 
-            - pr-pre-branch
-        types:
-            - completed
-permissions:
-    actions: write
-    contents: read
+    pull_request:
+        types: [closed]
+
+        branches: [pre]
+        
+        paths:
+            - 'force-app/**'
 
 
     # Jobs to be executed
