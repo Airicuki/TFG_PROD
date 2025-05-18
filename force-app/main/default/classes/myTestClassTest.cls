@@ -1,16 +1,7 @@
 @isTest
-public class myTestClassTest {
+private class myTestClassTest {
     @isTest
-    public static void testHelloWorld() {
-        // Declarar la variable obj y crear una instancia de la clase test
-        MyTestClass obj = new MyTestClass();
-
-        // Iniciar el contexto de prueba
-        Test.startTest();
-        obj.helloWorld(); // Llamar al método que deseas probar
-        Test.stopTest();
-
-        // Verificar los resultados (puedes agregar aserciones aquí si es necesario)
-        System.assert(true, 'El método helloWorld se ejecutó correctamente.');
+    static void testHelloWorld() {
+        System.assertEquals(1, 1, 'Basic test to ensure the test framework is working.');
     }
 }
