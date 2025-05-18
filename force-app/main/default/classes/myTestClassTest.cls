@@ -1,5 +1,5 @@
 @isTest
-public class testTest {
+public class myTestClassTest {
     @isTest
     public static void testHelloWorld() {
         // Declarar la variable obj y crear una instancia de la clase test
