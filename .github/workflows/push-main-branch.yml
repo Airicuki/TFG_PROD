@@ -12,47 +12,55 @@ on:
             - 'force-app/**'
             
 
+
 # Jobs to be executed
 jobs:
-    deploy-branch-to-production-org:
+    run-push-pre-branch:
         runs-on: ubuntu-latest
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.event.pull_request.merged == true && github.actor != 'dependabot[bot]' }} 
         steps:
-            # Install Salesforce CLI
+            - run: echo "Deploy after build"
+
+            - name: 'Install Node Js'
+                uses: actions/setup-node@v3
+                with:
+                    node-version: '20.0.0'
+
+            - name: 'Checkout source code'
+                uses: actions/checkout@v3
+                with:
+                    fetch-depth: 0
+
+                # Now Install Salesforce CLI
             - name: Install Salesforce CLI
-              run: |
-                  npm install --global sfdx-cli
-                  sfdx update
+                run: |
+                    npm install --global sfdx-cli
+                    sfdx update
 
             # install SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
             - name: 'Installing sfdx git delta'
-              run: | 
-                  echo y | sfdx plugins:install sfdx-git-delta
-                  sfdx plugins 
+                run: | 
+                    echo y | sfdx plugins:install sfdx-git-delta
+                    sfdx plugins 
 
-            # Checkout the source code
-            - name: 'Checkout source code'
-              uses: actions/checkout@v3
-              with:
-                fetch-depth: 0
 
-            # Store secret for production org
+            # Store secret for both otgs
             - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
-              shell: bash
-              run: |
-                  echo ${{ secrets.SFDX_PRODUCTION_URL}} > ./SFDX_PRODUCTION_URL.txt
+                shell: bash
+                run: |
+                    echo ${{ secrets.SFDX_PRODUCTION_URL }} > ./PROD_INSTANCE_URL.txt
 
             - name: 'Create delta packages for new, modified or deleted metadata'
-              run: | 
-                  mkdir changed-sources
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+                run: | 
+                    mkdir changed-sources
+                    sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
 
             # Authenticate to org
-            - name: 'Authenticate to Production Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_PRODUCTION_URL.txt -s -a production
+            - name: 'Authenticate to Staging Org to Staging org'
+                run: sfdx auth:sfdxurl:store -f ./PROD_INSTANCE_URL.txt -s -a staging
 
-            - name: 'Deploy the entire branch to Production org'
-              run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
+            - name: 'Deploy the entire branch'
+                run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
 
-            - name: 'Deploy destructive changes (if any) to Production org'
-              run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+            - name: 'Deploy destructive changes (if any) to Staging org'
+                run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings

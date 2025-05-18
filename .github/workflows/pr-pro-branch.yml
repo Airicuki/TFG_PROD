@@ -1,5 +1,5 @@
 # Unique name for this workflow
-name: pr-pre-branch
+name: pr-pro-branch
 
 # Definition when the workflow should run
 on:
@@ -11,7 +11,7 @@ on:
       # The branches filter allows to specify that this workflow should only
       # run if the branch name is "pre" or "main". This way we prevent this workflow
       # from running when PRs are opened on other branches
-      branches: [ pre ]
+      branches: [ main ]
       # We only care about changes to the force-app directory, which is the
       # root directory of the sfdx project. This prevents the job from running
       # when changing non-salesforce files (like this yml file).
@@ -125,16 +125,16 @@ jobs:
             # was generated from. This works just like that, there's no need to create
             # connected apps or any else. 
 
-            # The URL is stored in the Github Secret named PRE_INSTANCE_URL
+            # The URL is stored in the Github Secret named PROD_INSTANCE_URL
             # so here we store the URL into a text file
             - name: 'Populate auth file with SFDX_URL secret of pre org'
               shell: bash
               run: |
-                  echo "${{ secrets.PRE_INSTANCE_URL }}" > ./PRE_INSTANCE_URL.txt
+                  echo "${{ secrets.SFDX_PRODUCTION_URL }}" > ./PROD_INSTANCE_URL.txt
 
             # Authenticate to org using the URL stored in the text file
             - name: 'Authenticate to pre Org'
-              run: sfdx auth:sfdxurl:store -f ./PRE_INSTANCE_URL.txt -s -a pre
+              run: sfdx auth:sfdxurl:store -f ./PROD_INSTANCE_URL.txt -s -a pre
 
             # We use SFDX Git Delta to create a directory with only the metadata that has changed.
             # this allows us to deploy only those changes, as opposed to deploying the entire branch. 
