@@ -6,8 +6,8 @@ on:
     pull_request:
         types: [closed]
 
-        branches: [pre]
-        
+        branches: [Dev1, pre]
+
         paths:
             - 'force-app/**'
 
@@ -16,7 +16,7 @@ on:
 jobs:
     run-push-pre-branch:
         runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' }} 
+        if: ${{ github.event.pull_request.merged == true && github.actor != 'dependabot[bot]' }} 
         steps:
             - run: echo "Deploy after build"
 
