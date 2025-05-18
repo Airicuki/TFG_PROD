@@ -1,25 +1,39 @@
 # Unique name for this workflow
-name: Deploy pre branch to pre org
+name: push-pre-branch
 
 # Definition when the workflow should run
 on:
-    push:
-      branches: [ dev1, pre ]
-      paths:
-        - 'force-app/**'
-            
+    pull_request:
+        types: [closed]
 
-# Jobs to be executed
+        branches: [Dev1, pre]
+
+        paths:
+            - 'force-app/**'
+
+
+    # Jobs to be executed
 jobs:
-    deploy-branch-to-int-and-staging-orgs:
+    run-push-pre-branch:
         runs-on: ubuntu-latest
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.event.pull_request.merged == true && github.actor != 'dependabot[bot]' }} 
         steps:
+            - run: echo "Deploy after build"
+
+            - name: 'Install Node Js'
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '20.0.0'
+
+            - name: 'Checkout source code'
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
              # Now Install Salesforce CLI
             - name: Install Salesforce CLI
               run: |
-                   npm install --global sfdx-cli
-                   sfdx update
+                    npm install -g sfdx-cli@latest
 
             # install SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
             - name: 'Installing sfdx git delta'
@@ -27,11 +41,6 @@ jobs:
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
-            # Checkout the source code
-            - name: 'Checkout source code'
-              uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
 
             # Store secret for both otgs
             - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'

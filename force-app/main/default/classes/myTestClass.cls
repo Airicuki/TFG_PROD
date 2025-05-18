@@ -1,0 +1,5 @@
+public class myTestClass {
+    public void helloWorld() {
+        System.debug('Hello, World!');
+    }
+}
