@@ -1,0 +1,36 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: rgb(0,52,104);
+    border-top: 1px solid rgb(0,52,104);
+}
+
+.social-links a {
+    margin-right: 10px;
+}
+
+.social-links img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s;
+}
+
+.social-links img:hover {
+    transform: scale(1.1);
+}
+
+.footer-right {
+    text-align: right;
+}
+
+.footer-right a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #0070d2; /* Salesforce blue */
+}
+
+.footer-right a:hover {
+    text-decoration: underline;
+}
